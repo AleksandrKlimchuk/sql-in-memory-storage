@@ -1,6 +1,9 @@
 package com.digdes.school.task.executor;
 
-public interface RequestExecutor<T> {
+import java.util.List;
+import java.util.Map;
 
-    T executeRequest(String request);
+public interface RequestExecutor {
+
+     List<Map<String, Object>> executeRequest(String request) throws Exception;
 }
