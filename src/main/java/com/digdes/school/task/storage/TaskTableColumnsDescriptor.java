@@ -95,6 +95,11 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
     }
 
     private Double extractDouble(String columnValue) {
+        if (!columnValue.contains(".")) {
+            throw new RuntimeException(
+                    String.format("Invalid double value: %s. Long value must be formatted dddd.dddd", columnValue)
+            );
+        }
         try {
             return Double.valueOf(columnValue);
         } catch (Exception e) {
