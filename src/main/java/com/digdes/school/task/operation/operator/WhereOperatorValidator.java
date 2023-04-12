@@ -61,22 +61,30 @@ public class WhereOperatorValidator implements RequestValidator {
 
     @Override
     public void validate(String clearedConditions) throws Exception {
-        reset();
-        if (clearedConditions.isEmpty()) {
-            throw new Exception("After 'WHERE' should be at least 1 condition");
-        }
-        if (!CLEARED_CONDITIONS_PATTERN.matcher(clearedConditions).matches()) {
-            throw new Exception("Conditions has invalid structure");
-        }
+        checkConditionsNotEmpty(clearedConditions);
+        checkClearedConditionsHaveOnlyAvailableSymbols(clearedConditions);
         final char[] conditionsSymbols = clearedConditions.toCharArray();
-        if (conditionsSymbols[0] == WhereSQLOperator.CLOSING_PARENTHESES ||
-                conditionsSymbols[0] == WhereSQLOperator.AND_REPLACE_SYMBOL ||
-                conditionsSymbols[0] == WhereSQLOperator.OR_REPLACE_SYMBOL
-        ) {
-            throw new Exception("Unexpected symbols after 'WHERE'. " +
-                    "Conditions should starts with condition description or ("
+        checkConditionsStartWithAvailableSymbol(conditionsSymbols);
+        checkOrderOfSymbols(conditionsSymbols);
+        checkAllConditionsMatchCombiners();
+        checkParentesesCount();
+    }
+
+    private void checkParentesesCount() throws Exception {
+        if (parenthesesNestingCount != 0) {
+            throw new Exception("Invalid structure of conditions. Fix count of parentheses");
+        }
+    }
+
+    private void checkAllConditionsMatchCombiners() throws Exception {
+        if (conditionsCount - 1 != combinersCount) {
+            throw new Exception("Invalid structure of conditions. " +
+                    "Each condition must be connected to the following by AND or OR"
             );
         }
+    }
+
+    private void checkOrderOfSymbols(char[] conditionsSymbols) throws Exception {
         Validator validator = validatorMap.get(conditionsSymbols[0]);
         for (int i = 0; i < conditionsSymbols.length - 1; i++) {
             char nextSymbol = conditionsSymbols[i + 1];
@@ -87,19 +95,28 @@ public class WhereOperatorValidator implements RequestValidator {
             validator = validatorMap.get(nextSymbol);
         }
         validator.action.execute();
-        if (conditionsCount - 1 != combinersCount) {
-            throw new Exception("Invalid structure of conditions. " +
-                    "Each condition must be connected to the following by AND or OR"
+    }
+
+    private void checkConditionsStartWithAvailableSymbol(char[] conditionsSymbols) throws Exception {
+        if (conditionsSymbols[0] == WhereSQLOperator.CLOSING_PARENTHESES ||
+                conditionsSymbols[0] == WhereSQLOperator.AND_REPLACE_SYMBOL ||
+                conditionsSymbols[0] == WhereSQLOperator.OR_REPLACE_SYMBOL
+        ) {
+            throw new Exception("Unexpected symbols after 'WHERE'. " +
+                    "Conditions should starts with condition description or ("
             );
-        }
-        if (parenthesesNestingCount != 0) {
-            throw new Exception("Invalid structure of conditions. Fix count of parentheses");
         }
     }
 
-    private void reset() {
-        conditionsCount = 0;
-        combinersCount = 0;
-        parenthesesNestingCount = 0;
+    private void checkClearedConditionsHaveOnlyAvailableSymbols(String clearedConditions) throws Exception {
+        if (!CLEARED_CONDITIONS_PATTERN.matcher(clearedConditions).matches()) {
+            throw new Exception("Conditions has invalid structure");
+        }
+    }
+
+    private void checkConditionsNotEmpty(String clearedConditions) throws Exception {
+        if (clearedConditions.isEmpty()) {
+            throw new Exception("After 'WHERE' should be at least 1 condition");
+        }
     }
 }

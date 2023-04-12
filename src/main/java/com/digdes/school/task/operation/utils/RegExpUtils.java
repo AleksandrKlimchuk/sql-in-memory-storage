@@ -36,7 +36,6 @@ public final class RegExpUtils {
     public static final String WHERE_OPERATOR_EXPRESSION = "(\\s+(?i:where)\\s+(.+))?";
     public static final String SELECT_OPERATION_EXPRESSION = "^\\s*(?i:select)" + WHERE_OPERATOR_EXPRESSION + "$";
     public static final int SELECT_OPERATION_WHERE_GROUP = 1;
-    public static final int SELECT_OPERATION_WHERE_CONDITIONS_GROUP = 2;
     public static final Pattern SELECT_OPERATION_PATTERN = Pattern.compile(SELECT_OPERATION_EXPRESSION);
 
     public static final String UPDATE_OPERATION_EXPRESSION = "^\\s*(?i:update)\\s+(?i:values)\\s+" +
@@ -44,21 +43,21 @@ public final class RegExpUtils {
             "(\\s*" + COLUMN_NAME_VALUE_PAIR_EXPRESSION + "\\s*))" + WHERE_OPERATOR_EXPRESSION + "$";
     public static final int UPDATE_OPERATION_VALUES_GROUP = 1;
     public static final int UPDATE_OPERATION_WHERE_GROUP = 8;
-    public static final int UPDATE_OPERATION_WHERE_CONDITIONS_GROUP = 9;
     public static final Pattern UPDATE_OPERATION_PATTERN = Pattern.compile(UPDATE_OPERATION_EXPRESSION);
 
     public static final String DELETE_OPERATION_EXPRESSION = "^\\s*(?i:delete)" + WHERE_OPERATOR_EXPRESSION + "$";
     public static final int DELETE_OPERATION_WHERE_GROUP = 1;
-    public static final int DELETE_OPERATION_WHERE_CONDITIONS_GROUP = 2;
     public static final Pattern DELETE_OPERATION_PATTERN = Pattern.compile(DELETE_OPERATION_EXPRESSION);
 
     public static final String SHIELDING_SYMBOLS = "<([{\\^-=$!|]})?*+.>".replaceAll(".", "\\\\$0");
     public final static Pattern SHIELDING_SYMBOLS_PATTERN = Pattern.compile("[" + SHIELDING_SYMBOLS + "]");
 
-
+    public final static Pattern SQL_SEARCH_PATTERN_SYMBOL = Pattern.compile("%");
 
     public static String shieldExpression(String shieldingExpression) {
         final Matcher shieldSymbolMatcher = RegExpUtils.SHIELDING_SYMBOLS_PATTERN.matcher(shieldingExpression);
-        return shieldSymbolMatcher.replaceAll("\\\\$0").replaceAll("%", ".*");
+        final String shieldedString = shieldSymbolMatcher.replaceAll("\\\\$0");
+        final Matcher searchPatternMatcher = SQL_SEARCH_PATTERN_SYMBOL.matcher(shieldedString);
+        return searchPatternMatcher.replaceAll(".*");
     }
 }

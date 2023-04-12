@@ -18,14 +18,10 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
     private static final String TRUE_VALUE = "true";
     private static final String FALSE_VALUE = "false";
 
-    private static final class ColumnDescriptor {
-        Function<String, Object> converter;
-        Set<Class<? extends Condition>> availableConditions;
-
-        ColumnDescriptor(Function<String, Object> converter, Set<Class<? extends Condition>> availableConditions) {
-            this.converter = converter;
-            this.availableConditions = availableConditions;
-        }
+    private record ColumnDescriptor(
+            Function<String, Object> converter,
+            Set<Class<? extends Condition>> availableConditions
+    ) {
     }
 
     private static final Set<Class<? extends Condition>> NUMERIC_TYPE_AVAILABLE_CONDITIONS = Set.of(
@@ -40,7 +36,6 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
     );
 
     private final Map<String, ColumnDescriptor> columnsDescriptors = new HashMap<>();
-
 
     public TaskTableColumnsDescriptor() {
         columnsDescriptors.put(
@@ -63,13 +58,13 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
     @Override
     public Function<String, Object> getConverterByColumnName(String columnName) {
         final ColumnDescriptor columnDescriptor = getColumnDescriptorByColumnName(columnName);
-        return columnDescriptor.converter;
+        return columnDescriptor.converter();
     }
 
     @Override
     public boolean isConditionAvailableForColumn(String columnName, Class<? extends Condition> conditionType) {
         final ColumnDescriptor columnDescriptor = getColumnDescriptorByColumnName(columnName);
-        return columnDescriptor.availableConditions.contains(conditionType);
+        return columnDescriptor.availableConditions().contains(conditionType);
     }
 
     private ColumnDescriptor getColumnDescriptorByColumnName(String columnName) {
@@ -100,6 +95,11 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
     }
 
     private Double extractDouble(String columnValue) {
+        if (!columnValue.contains(".")) {
+            throw new RuntimeException(
+                    String.format("Invalid double value: %s. Long value must be formatted dddd.dddd", columnValue)
+            );
+        }
         try {
             return Double.valueOf(columnValue);
         } catch (Exception e) {
@@ -109,10 +109,6 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
         }
     }
 
-    private boolean checkSingeQuotesWrappingForString(String str) {
-        return str.indexOf('\'') == 0 && str.lastIndexOf('\'') == str.length() - 1;
-    }
-
     private boolean extractBoolean(String columnValue) {
         if (!isValueBoolean(columnValue)) {
             throw new RuntimeException(
@@ -120,6 +116,10 @@ public class TaskTableColumnsDescriptor implements TableColumnsDescriptor {
             );
         }
         return Boolean.parseBoolean(columnValue);
+    }
+
+    private boolean checkSingeQuotesWrappingForString(String str) {
+        return str.indexOf('\'') == 0 && str.lastIndexOf('\'') == str.length() - 1;
     }
 
     private boolean isValueBoolean(String testValue) {

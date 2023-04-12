@@ -20,7 +20,12 @@ public interface Condition {
         }
         final List<Object> columnValues = table.selectValuesByColumnName(columnName);
         final Function<String, Object> converter = columnsDescriptor.getConverterByColumnName(columnName);
-        final Object convertedParamValue = converter.apply(paramValue);
+        Object convertedParamValue;
+        try {
+            convertedParamValue = converter.apply(paramValue);
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
         final Set<Integer> matchedRowIndices = new HashSet<>();
         for (int i = 0; i < columnValues.size(); i++) {
             final Object currentValue = columnValues.get(i);

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface RowColumnStorage extends Storage<List<Map<String, Object>>>{
+public interface RowColumnStorage {
 
     TableColumnsDescriptor getColumnsDescriptor();
 

@@ -23,10 +23,15 @@ public class InsertSQLOperation implements SQLOperation {
         validator.validate(sqlRequest);
         final Map<String, String> columnNameAndValuePairs = RowUtils.extractColumnNameAndValuePairs(sqlRequest);
         // Reallocate new map, maybe columnNameAndValuePairs should be Map<String, Object>;
-        final Map<String, Object> rowToInsert = columnNameAndValuePairs.entrySet().stream()
-                .filter(pair -> !RowUtils.NULL_VALUE.equalsIgnoreCase(pair.getValue()))
-                .map(pair -> createColumnNameAndValueEntry(pair, storage.getColumnsDescriptor()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<String, Object> rowToInsert;
+        try {
+            rowToInsert = columnNameAndValuePairs.entrySet().stream()
+                    .filter(pair -> !RowUtils.NULL_VALUE.equalsIgnoreCase(pair.getValue()))
+                    .map(pair -> createColumnNameAndValueEntry(pair, storage.getColumnsDescriptor()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
         if (rowToInsert.isEmpty()) {
             throw new Exception("Empty row can't be inserted. At least 1 pair name and value must be presented");
         }
