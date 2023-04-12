@@ -1,5 +1,6 @@
 package com.digdes.school.task.operation;
 
+import com.digdes.school.task.operation.delete.DeleteSqlOperation;
 import com.digdes.school.task.operation.insert.InsertSQLOperation;
 import com.digdes.school.task.operation.select.SelectSQLOperation;
 import com.digdes.school.task.operation.update.UpdateSQLOperation;
@@ -19,6 +20,8 @@ public class CRUDSQLOperationFactory implements SQLOperationFactory {
         operationMap.put(selectSQLOperation.getName(), selectSQLOperation);
         final SQLOperation updateSqlOperation = new UpdateSQLOperation();
         operationMap.put(updateSqlOperation.getName(), updateSqlOperation);
+        final SQLOperation deleteOperation = new DeleteSqlOperation();
+        operationMap.put(deleteOperation.getName(), deleteOperation);
     }
 
     @Override
