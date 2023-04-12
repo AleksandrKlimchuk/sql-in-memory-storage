@@ -1,7 +1,10 @@
-package com.digdes.school.task.operation;
+package com.digdes.school.task.operation.insert;
 
+import com.digdes.school.task.operation.RequestValidator;
+import com.digdes.school.task.operation.SQLOperation;
 import com.digdes.school.task.storage.RowColumnStorage;
 import com.digdes.school.task.storage.TableColumnsDescriptor;
+import com.digdes.school.task.utils.RegExpUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +33,8 @@ public class InsertSQLOperation implements SQLOperation {
             throw new Exception("Empty row can't be inserted. At least 1 pair name and value must be presented");
         }
         storage.insert(rowToInsert);
-        return List.of(new HashMap<>(rowToInsert));
+        return null;
+        //return new ArrayList<>(new HashMap<>(rowToInsert));
     }
 
     @Override
@@ -39,10 +43,13 @@ public class InsertSQLOperation implements SQLOperation {
     }
 
     private Map<String, String> extractColumnNameAndValuePairs(String sqlRequest) {
-        final Matcher pairsMatcher = RequestValidator.COLUMN_NAME_VALUE_PAIR_PATTERN.matcher(sqlRequest);
+        final Matcher pairsMatcher = RegExpUtils.COLUMN_NAME_VALUE_PAIR_TO_INSERT_PATTERN.matcher(sqlRequest);
         final Map<String, String> columnNameAndValuePairs = new HashMap<>();
         while (pairsMatcher.find()) {
-            columnNameAndValuePairs.put(pairsMatcher.group(1).toLowerCase(), pairsMatcher.group(2));
+            columnNameAndValuePairs.put(
+                    pairsMatcher.group(RegExpUtils.INSERT_COLUMN_NAME_GROUP).toLowerCase(),
+                    pairsMatcher.group(RegExpUtils.INSERT_COLUMN_VALUE_GROUP)
+            );
         }
         return columnNameAndValuePairs;
     }
