@@ -26,6 +26,7 @@ public class JavaSchoolStarter {
 //        app.execute("insert values 'id'=1,  'lastname'='bba', 'age'=20, 'cost'=31.12,   'active'=false"); //
 //        app.execute("insert values 'id'=2,  'lastname'='cBa', 'age'=30, 'cost'=null,   'active'=true");   //
 //        app.execute("insert values 'id'=3,  'lastname'='DBA', 'age'=null, 'cost'=31.12,   'active'=false"); //
+//        //app.execute("insert values 'id'=null,  'active'=null"); //
 //        app.execute("insert values 'id'=4,  'lastname'='faf', 'age'=50, 'cost'=3132.12, 'active'=true");
 //        app.execute("insert values 'id'=5,  'lastname'='oqo', 'age'=60, 'cost'=31.1642, 'active'=false"); //
 //        app.execute("insert values 'id'=6,  'lastname'='LoL', 'age'=70, 'cost'=31.12,   'active'=false");//
@@ -34,19 +35,26 @@ public class JavaSchoolStarter {
 //        app.execute("insert values 'id'=9, 'lastname'='faa', 'age'=10, 'cost'=31.12,   'active'=true");
 //        app.execute("insert values 'id'=10, 'lastname'='213', 'age'=20, 'cost'=31.12,   'active'=false");//10
 //        app.execute("insert values 'id'=11, 'lastname'='*', 'age'=20, 'cost'=31.12,   'active'=false");//10
-////        System.out.println(app.execute("select"));
-////        System.out.println(app.execute("select").size());
+//        System.out.println(app.execute("select"));
+//        System.out.println(app.execute("select").size());
 //        System.out.println(app.execute("select"));
 //        System.out.println(app.execute("select where 'id'>=10"));
 //        System.out.println(app.execute("select where 'id'>=10 aNd 'id'!= 12"));
 //        System.out.println(app.execute("sElect wHere ('id'>3 aNd ('age'<=50 or ('active'=true and 'age'>70)) AND'id'!=10)"));//
 //        System.out.println(app.execute("sElect wHere ('id'>3 aNd ('age'<=50 or ('active'=true and 'age'>70 ) and 'lastname' ilike '%a%') AND'id'!=10)"));//
-//        System.out.println(app.execute("sElect wHere ('id'>3 & ('age'<=50 or ('active'=true and 'age'>70)) AND'id'!=10)"));//
+//        System.out.println(app.execute("sElect wHere ('id'>3 AND ('age'<=50 or ('active'=true and 'age'>70)) AND'id'!=10)"));//
 //        System.out.println(app.execute("select where 'active'=true"));
 //        System.out.println(app.execute("select where 'lastname' like 'aba'"));
 //        System.out.println(app.execute("select where 'lastname' like '%ba'"));
 //        System.out.println(app.execute("select where 'laSTname' ilike '%o%'"));
 //        System.out.println(app.execute("select where 'laSTname' like 'l%l'"));
 //        System.out.println(app.execute("select where 'lastname' = 'aba'"));
+//        System.out.println();
+//        System.out.println(app.execute("select"));
+//        System.out.println(app.execute("update values 'cost'=12.5"));
+//        System.out.println(app.execute("update values 'active'=null, 'lastname'=null where 'id'<3"));
+//        System.out.println(app.execute("select"));
+//        System.out.println(app.execute("update values 'id'=100, 'cost'=null, 'age'=null where 'id' < 3"));
+//        System.out.println(app.execute("select"));
 //    }
 }

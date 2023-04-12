@@ -5,7 +5,7 @@ import com.digdes.school.task.operation.operator.conditon.Condition;
 import com.digdes.school.task.operation.operator.conditon.ConditionFactory;
 import com.digdes.school.task.operation.operator.conditon.RequestConditionFactory;
 import com.digdes.school.task.storage.RowColumnStorage;
-import com.digdes.school.task.utils.RegExpUtils;
+import com.digdes.school.task.operation.utils.RegExpUtils;
 
 import java.util.*;
 import java.util.function.BiFunction;

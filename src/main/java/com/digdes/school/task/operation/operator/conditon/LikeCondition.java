@@ -1,6 +1,6 @@
 package com.digdes.school.task.operation.operator.conditon;
 
-import com.digdes.school.task.utils.RegExpUtils;
+import com.digdes.school.task.operation.utils.RegExpUtils;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
