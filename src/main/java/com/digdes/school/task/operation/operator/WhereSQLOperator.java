@@ -10,6 +10,7 @@ import com.digdes.school.task.operation.utils.RegExpUtils;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WhereSQLOperator implements SQLOperator {
 
@@ -21,6 +22,11 @@ public class WhereSQLOperator implements SQLOperator {
 
     private static final String AND = "and";
     private static final String OR = "or";
+
+
+    Pattern AND_PATTERN = Pattern.compile("(?i:" + AND + ")");
+    Pattern OR_PATTERN = Pattern.compile("(?i:" + OR + ")");
+    Pattern WHITESPACES_PATTERN = Pattern.compile("\\s");
 
     private record ConditionParams(
             String columnName, String operator, String paramValue
@@ -106,12 +112,14 @@ public class WhereSQLOperator implements SQLOperator {
     }
 
     private String replaceAllConditionsBySpecialSymbol(String conditions) {
-        String clearedConditions = conditions.replaceAll(
-                RegExpUtils.COLUMN_NAME_VALUE_PAIR_CONDITION_EXPRESSION, String.valueOf(CONDITION_REPLACE_SYMBOL)
-        );
-        clearedConditions = clearedConditions.replaceAll("(?i:" + AND + ")", String.valueOf(AND_REPLACE_SYMBOL));
-        clearedConditions = clearedConditions.replaceAll("(?i:" + OR + ")", String.valueOf(OR_REPLACE_SYMBOL));
-        clearedConditions = clearedConditions.replaceAll("\\s", "");
+        final Matcher conditionsMatcher = RegExpUtils.COLUMN_NAME_VALUE_PAIR_OF_CONDITION_PATTERN.matcher(conditions);
+        String clearedConditions = conditionsMatcher.replaceAll(String.valueOf(CONDITION_REPLACE_SYMBOL));
+        final Matcher andMatcher = AND_PATTERN.matcher(clearedConditions);
+        clearedConditions = andMatcher.replaceAll(String.valueOf(AND_REPLACE_SYMBOL));
+        final Matcher orMatcher = OR_PATTERN.matcher(clearedConditions);
+        clearedConditions = orMatcher.replaceAll(String.valueOf(OR_REPLACE_SYMBOL));
+        final Matcher whitespacesMatcher = WHITESPACES_PATTERN.matcher(clearedConditions);
+        clearedConditions = whitespacesMatcher.replaceAll("");
         return clearedConditions;
     }
 

@@ -52,8 +52,12 @@ public final class RegExpUtils {
     public static final String SHIELDING_SYMBOLS = "<([{\\^-=$!|]})?*+.>".replaceAll(".", "\\\\$0");
     public final static Pattern SHIELDING_SYMBOLS_PATTERN = Pattern.compile("[" + SHIELDING_SYMBOLS + "]");
 
+    public final static Pattern SQL_SEARCH_PATTERN_SYMBOL = Pattern.compile("%");
+
     public static String shieldExpression(String shieldingExpression) {
         final Matcher shieldSymbolMatcher = RegExpUtils.SHIELDING_SYMBOLS_PATTERN.matcher(shieldingExpression);
-        return shieldSymbolMatcher.replaceAll("\\\\$0").replaceAll("%", ".*");
+        final String shieldedString = shieldSymbolMatcher.replaceAll("\\\\$0");
+        final Matcher searchPatternMatcher = SQL_SEARCH_PATTERN_SYMBOL.matcher(shieldedString);
+        return searchPatternMatcher.replaceAll(".*");
     }
 }
