@@ -10,11 +10,6 @@ public class TaskStorage implements RowColumnStorage {
     private final TableColumnsDescriptor columnsDescriptor = new TaskTableColumnsDescriptor();
 
     @Override
-    public List<Map<String, Object>> getData() {
-        return data;
-    }
-
-    @Override
     public TableColumnsDescriptor getColumnsDescriptor() {
         return columnsDescriptor;
     }
