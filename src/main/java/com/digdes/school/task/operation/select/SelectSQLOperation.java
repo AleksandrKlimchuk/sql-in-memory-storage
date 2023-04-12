@@ -1,12 +1,14 @@
 package com.digdes.school.task.operation.select;
 
 import com.digdes.school.task.operation.SQLOperation;
-import com.digdes.school.task.operation.operator.SQLOperator;
-import com.digdes.school.task.operation.operator.WhereSQLOperator;
-import com.digdes.school.task.storage.RowColumnStorage;
 import com.digdes.school.task.operation.utils.RegExpUtils;
+import com.digdes.school.task.operation.utils.RowUtils;
+import com.digdes.school.task.storage.RowColumnStorage;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -23,17 +25,10 @@ public class SelectSQLOperation implements SQLOperation {
             ));
         }
         final List<Map<String, Object>> allRows = storage.selectAllRows();
-        if (Objects.isNull(matcher.group(RegExpUtils.SELECT_OPERATION_WHERE_GROUP))) {
-            return allRows.stream()
-                    .map(HashMap::new)
-                    .collect(Collectors.toList());
-        }
-        final SQLOperator whereOperator = new WhereSQLOperator();
-        final String group = matcher.group(RegExpUtils.SELECT_OPERATION_WHERE_CONDITIONS_GROUP);
-        final Set<Integer> selectedIndices = whereOperator.execute(
-                group, storage
+        final Set<Integer> indicesOfSelectedRows = RowUtils.extractIndicesByConditionsOrAll(
+                storage, matcher, RegExpUtils.SELECT_OPERATION_WHERE_GROUP
         );
-        return selectedIndices.stream()
+        return indicesOfSelectedRows.stream()
                 .map(allRows::get)
                 .map(HashMap::new)
                 .collect(Collectors.toList());

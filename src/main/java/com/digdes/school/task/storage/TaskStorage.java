@@ -35,13 +35,7 @@ public class TaskStorage implements RowColumnStorage {
     public void updateValuesByIndices(Set<Integer> rowIndicesToUpdate, Map<String, Object> newValues) {
         for (Integer rowToUpdateIndex : rowIndicesToUpdate) {
             Map<String, Object> storageRow = data.get(rowToUpdateIndex);
-            for (Map.Entry<String, Object> newValue : newValues.entrySet()) {
-                if (newValue.getValue() == RowUtils.NULL_OBJECT) {
-                    storageRow.remove(newValue.getKey());
-                } else {
-                    storageRow.put(newValue.getKey(), newValue.getValue());
-                }
-            }
+            RowUtils.updateRowValuesOrRemoveIfNull(newValues, storageRow);
         }
     }
 

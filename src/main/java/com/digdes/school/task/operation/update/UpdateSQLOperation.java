@@ -34,24 +34,13 @@ public class UpdateSQLOperation implements SQLOperation {
         final Map<String, Object> updateNewValues = createRowToUpdate(
                 updateNewValuesString, storage.getColumnsDescriptor()
         );
-        final Set<Integer> indicesOfRowsToUpdate;
-        if (Objects.isNull(matcher.group(RegExpUtils.UPDATE_OPERATION_WHERE_GROUP))) {
-            indicesOfRowsToUpdate = IntStream.range(0, allRows.size()).boxed().collect(Collectors.toSet());
-        } else {
-            final String whereConditions = matcher.group(RegExpUtils.UPDATE_OPERATION_WHERE_CONDITIONS_GROUP);
-            final SQLOperator whereOperator = new WhereSQLOperator();
-            indicesOfRowsToUpdate = whereOperator.execute(whereConditions, storage);
-        }
+        final Set<Integer> indicesOfRowsToUpdate = RowUtils.extractIndicesByConditionsOrAll(
+                storage, matcher, RegExpUtils.UPDATE_OPERATION_WHERE_GROUP
+        );
         final List<Map<String, Object>> updatedRows = new ArrayList<>();
         for (Integer indexOfRowToUpdate : indicesOfRowsToUpdate) {
             final Map<String, Object> updatedRow = new HashMap<>(allRows.get(indexOfRowToUpdate));
-            for (Map.Entry<String, Object> newColumnValue : updateNewValues.entrySet()) {
-                if (newColumnValue.getValue() == RowUtils.NULL_OBJECT) {
-                    updatedRow.remove(newColumnValue.getKey());
-                } else {
-                    updatedRow.put(newColumnValue.getKey(), newColumnValue.getValue());
-                }
-            }
+            RowUtils.updateRowValuesOrRemoveIfNull(updateNewValues, updatedRow);
             if (updatedRow.values().stream().allMatch(Objects::isNull)) {
                 throw new Exception("Update request will make empty row");
             }
