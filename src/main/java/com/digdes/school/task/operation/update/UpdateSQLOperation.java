@@ -1,8 +1,6 @@
 package com.digdes.school.task.operation.update;
 
 import com.digdes.school.task.operation.SQLOperation;
-import com.digdes.school.task.operation.operator.SQLOperator;
-import com.digdes.school.task.operation.operator.WhereSQLOperator;
 import com.digdes.school.task.operation.utils.RegExpUtils;
 import com.digdes.school.task.operation.utils.RowUtils;
 import com.digdes.school.task.storage.RowColumnStorage;
@@ -12,7 +10,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class UpdateSQLOperation implements SQLOperation {
 
@@ -55,11 +52,11 @@ public class UpdateSQLOperation implements SQLOperation {
         return SQL_OPERATION_NAME;
     }
 
-    private Map<String, Object> createRowToUpdate (
+    private Map<String, Object> createRowToUpdate(
             String pairs, TableColumnsDescriptor columnsDescriptor
     ) {
         final Map<String, String> columnNameAndValuePairs = RowUtils.extractColumnNameAndValuePairs(pairs);
-        return  columnNameAndValuePairs.entrySet().stream()
+        return columnNameAndValuePairs.entrySet().stream()
                 .map(pair -> createColumnNameAndValueEntry(pair, columnsDescriptor))
                 .collect(Collectors.toMap(ColumnNameValuePair::columnName, ColumnNameValuePair::columnValue));
     }
