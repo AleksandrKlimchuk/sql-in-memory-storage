@@ -2,6 +2,7 @@ package com.digdes.school.task.operation;
 
 import com.digdes.school.task.operation.insert.InsertSQLOperation;
 import com.digdes.school.task.operation.select.SelectSQLOperation;
+import com.digdes.school.task.operation.update.UpdateSQLOperation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,8 @@ public class CRUDSQLOperationFactory implements SQLOperationFactory {
         operationMap.put(insertSQLOperation.getName(), insertSQLOperation);
         final SQLOperation selectSQLOperation = new SelectSQLOperation();
         operationMap.put(selectSQLOperation.getName(), selectSQLOperation);
+        final SQLOperation updateSqlOperation = new UpdateSQLOperation();
+        operationMap.put(updateSqlOperation.getName(), updateSqlOperation);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package com.digdes.school.task.storage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.digdes.school.task.operation.utils.RowUtils;
+
+import java.util.*;
 
 public class TaskStorage implements RowColumnStorage {
 
@@ -27,8 +25,8 @@ public class TaskStorage implements RowColumnStorage {
     }
 
     @Override
-    public List<Map<String, Object>> select() {
-        return makeCopy();
+    public List<Map<String, Object>> selectAllRows() {
+        return data;
     }
 
     @Override
@@ -38,9 +36,17 @@ public class TaskStorage implements RowColumnStorage {
                 .toList();
     }
 
-    private List<Map<String, Object>> makeCopy() {
-        return data.stream()
-                .map(HashMap::new)
-                .collect(Collectors.toList());
+    @Override
+    public void updateValuesByIndices(Set<Integer> rowIndicesToUpdate, Map<String, Object> newValues) {
+        for (Integer rowToUpdateIndex : rowIndicesToUpdate) {
+            Map<String, Object> storageRow = data.get(rowToUpdateIndex);
+            for (Map.Entry<String, Object> newValue : newValues.entrySet()) {
+                if (newValue.getValue() == RowUtils.NULL_OBJECT) {
+                    storageRow.remove(newValue.getKey());
+                } else {
+                    storageRow.put(newValue.getKey(), newValue.getValue());
+                }
+            }
+        }
     }
 }
