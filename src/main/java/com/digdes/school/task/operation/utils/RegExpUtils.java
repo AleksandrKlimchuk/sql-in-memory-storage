@@ -47,6 +47,11 @@ public final class RegExpUtils {
     public static final int UPDATE_OPERATION_WHERE_CONDITIONS_GROUP = 9;
     public static final Pattern UPDATE_OPERATION_PATTERN = Pattern.compile(UPDATE_OPERATION_EXPRESSION);
 
+    public static final String DELETE_OPERATION_EXPRESSION = "^\\s*(?i:delete)" + WHERE_OPERATOR_EXPRESSION + "$";
+    public static final int DELETE_OPERATION_WHERE_GROUP = 1;
+    public static final int DELETE_OPERATION_WHERE_CONDITIONS_GROUP = 2;
+    public static final Pattern DELETE_OPERATION_PATTERN = Pattern.compile(DELETE_OPERATION_EXPRESSION);
+
     public static final String SHIELDING_SYMBOLS = "<([{\\^-=$!|]})?*+.>".replaceAll(".", "\\\\$0");
     public final static Pattern SHIELDING_SYMBOLS_PATTERN = Pattern.compile("[" + SHIELDING_SYMBOLS + "]");
 

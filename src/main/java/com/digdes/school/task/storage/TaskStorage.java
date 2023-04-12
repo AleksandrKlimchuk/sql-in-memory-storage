@@ -49,4 +49,12 @@ public class TaskStorage implements RowColumnStorage {
             }
         }
     }
+
+    @Override
+    public void deleteByIndices(Set<Integer> indicesOfDeleteRows) {
+        indicesOfDeleteRows.stream()
+                .sorted(Comparator.reverseOrder())
+                .mapToInt(Integer::intValue)
+                .forEach(data::remove);
+    }
 }

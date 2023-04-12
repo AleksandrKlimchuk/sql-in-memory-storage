@@ -56,5 +56,8 @@ public class JavaSchoolStarter {
 //        System.out.println(app.execute("select"));
 //        System.out.println(app.execute("update values 'id'=100, 'cost'=null, 'age'=null where 'id' < 3"));
 //        System.out.println(app.execute("select"));
+//        System.out.println(app.execute("select"));
+//        System.out.println(app.execute("delete where 'id' < 2 AND 'lastname' like 'b%'"));
+//        System.out.println(app.execute("select"));
 //    }
 }
