@@ -54,11 +54,15 @@ public class UpdateSQLOperation implements SQLOperation {
 
     private Map<String, Object> createRowToUpdate(
             String pairs, TableColumnsDescriptor columnsDescriptor
-    ) {
+    ) throws Exception {
         final Map<String, String> columnNameAndValuePairs = RowUtils.extractColumnNameAndValuePairs(pairs);
-        return columnNameAndValuePairs.entrySet().stream()
-                .map(pair -> createColumnNameAndValueEntry(pair, columnsDescriptor))
-                .collect(Collectors.toMap(ColumnNameValuePair::columnName, ColumnNameValuePair::columnValue));
+        try {
+            return columnNameAndValuePairs.entrySet().stream()
+                    .map(pair -> createColumnNameAndValueEntry(pair, columnsDescriptor))
+                    .collect(Collectors.toMap(ColumnNameValuePair::columnName, ColumnNameValuePair::columnValue));
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
     }
 
     private ColumnNameValuePair createColumnNameAndValueEntry(
